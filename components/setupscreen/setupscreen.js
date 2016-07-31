@@ -26,6 +26,7 @@ class SetupScreen extends Component {
   };
   runButtonClickHandler() {
     this.props.setRunning(true);
+    this.props.navigator.jumpForward(0);
   }
   cleanNumber(numb) {
     return numb.replace(/[^\d]/g, '');

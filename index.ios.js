@@ -18,6 +18,8 @@ import {Provider} from 'react-redux';
 import {createStore/* , applyMiddleware, compose*/} from 'redux';
 import reducer from './reducers';
 import SetupScreen from './components/setupscreen';
+import TimerScreen from './components/timerscreen';
+import {setupWinsize, stopWinsize} from './utils';
 
 // const createStoreWithMiddleware =
 //   compose(
@@ -32,7 +34,8 @@ class TalkTimer extends Component {
   constructor(props, context) {
     super(props, context);
     this.routes = [
-      {index: 0, component: SetupScreen}
+      {index: 0, component: SetupScreen},
+      {index: 1, component: TimerScreen}
     ];
     this.renderScene = this.renderScene.bind(this);
   }
@@ -40,6 +43,12 @@ class TalkTimer extends Component {
     return (
       <route.component navigator={navigator} />
     );
+  }
+  componentDidMount() {
+    setupWinsize(store);
+  }
+  componentWillUnmount() {
+    stopWinsize();
   }
   render() {
     return (

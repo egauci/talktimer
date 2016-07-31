@@ -4,7 +4,6 @@ const initState = Immutable.fromJS({
   running: false,
   paused: false,
   startTime: 0,
-  stopTime: 0,
   startPaused: 0,
   pausedTime: 0,
   maximumTime: 0,
@@ -25,12 +24,15 @@ const data = (state = initState, action) => {
     warnTime = Math.max(warnTime, newState.get('minimumTime'));
     return newState.set('warnTime', warnTime);
   case 'SET_RUNNING':
-    const running = action.payload !== undefined ? action.payload : !state.get('running');
+    const running = action.payload;
     newState = state.set('running', running);
     if (running) {
+      newState = newState.set('startPaused', 0);
+      newState = newState.set('pausedTime', 0);
+      newState = newState.set('paused', false);
       return newState.set('startTime', Date.now());
     }
-    return newState.set('stopTime', Date.now());
+    return newState;
   case 'SET_PAUSED':
     const paused = action.payload !== undefined ? action.payload : !state.get('paused');
     newState = state.set('paused', paused);
