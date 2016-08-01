@@ -27,10 +27,12 @@ const data = (state = initState, action) => {
     const running = action.payload;
     newState = state.set('running', running);
     if (running) {
-      newState = newState.set('startPaused', 0);
-      newState = newState.set('pausedTime', 0);
-      newState = newState.set('paused', false);
-      return newState.set('startTime', Date.now());
+      return newState.withMutations(st => {
+        st.set('startPaused', 0)
+          .set('pausedTime', 0)
+          .set('paused', false)
+          .set('startTime', Date.now());
+      });
     }
     return newState;
   case 'SET_PAUSED':

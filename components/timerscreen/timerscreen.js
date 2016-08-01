@@ -59,7 +59,8 @@ class TimerScreen extends Component {
     } else {
       elapsedBarColor = 'lightgray';
     }
-    const elapsedBarHeight = Math.floor(Math.min(elapsed, maximumTime) / maximumTime * pixels);
+    const elapsedBarHeight =
+      Math.round(Math.min(elapsed, maximumTime) / maximumTime * pixels);
     const elapsedBarTop = pixels - elapsedBarHeight + timerHeight;
     const showWarnLine = () => {
       if (warnTime < maximumTime) {

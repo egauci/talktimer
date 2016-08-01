@@ -1,6 +1,7 @@
 package com.talktimer;
 
 import com.facebook.react.ReactActivity;
+import com.marcshilling.idletimer.IdleTimerPackage;
 
 public class MainActivity extends ReactActivity {
 

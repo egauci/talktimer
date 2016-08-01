@@ -6,15 +6,25 @@ import {
   Text,
   TextInput,
   Slider,
+  TouchableWithoutFeedback,
   StyleSheet
 } from 'react-native';
+
 import Button from '../button';
+
+const {State: TextInputState} = TextInput;
+
+const dismissKeyboard = () => {
+  TextInputState.blurTextInput(TextInputState.currentlyFocusedField());
+};
 
 class SetupScreen extends Component {
   constructor(props, context) {
     super(props, context);
     this.totalChanged = this.totalChanged.bind(this);
     this.runButtonClickHandler = this.runButtonClickHandler.bind(this);
+    this.handleWarnChange = this.handleWarnChange.bind(this);
+    this.handleMinChange = this.handleMinChange.bind(this);
   }
   static propTypes = {
     data: PropTypes.object.isRequired,
@@ -34,56 +44,68 @@ class SetupScreen extends Component {
   totalChanged(total) {
     this.props.setMaxTime(this.cleanNumber(total));
   }
+  handleWarnChange(time) {
+    dismissKeyboard();
+    this.props.setWarnTime(time);
+  }
+  handleMinChange(time) {
+    dismissKeyboard();
+    this.props.setMinTime(time);
+  }
   render() {
     const data = this.props.data.toJS();
-    const maxTime = Math.floor(data.maximumTime / 60000);
-    const minTime = Math.floor(data.minimumTime / 60000);
-    const warnTime = Math.floor(data.warnTime / 60000);
+    const maxTime = Math.round(data.maximumTime / 60000);
+    const minTime = Math.round(data.minimumTime / 60000);
+    const warnTime = Math.round(data.warnTime / 60000);
     return (
       <View
         style={styles.compContainer}
       >
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, {flex: 0.2}]}>
           <Text style={[styles.inputs, styles.inputsText]}>Total Time (minutes)</Text>
           <TextInput
             multiline={false}
             onChangeText={this.totalChanged}
             value={maxTime === 0 ? '' : String(maxTime)}
-            keyBoardType="numeric"
+            keyboardType="numeric"
             style={[styles.inputs, styles.numInput]}
           />
         </View>
-        <View style={styles.inputContainer}>
-          <Text style={[styles.inputs, styles.inputsText]}>Minimum Time</Text>
-          <Slider
-            disabled={maxTime === 0}
-            minimumValue={0}
-            maximumValue={maxTime ? maxTime : 1}
-            onValueChange={this.props.setMinTime}
-            step={1}
-            value={minTime}
-            style={[styles.inputs, styles.sliderInput]}
-          />
-          <Text style={[styles.inputs, styles.inputsText]}>{minTime}</Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={[styles.inputs, styles.inputsText]}>Warning Time</Text>
-          <Slider
-            disabled={maxTime === 0}
-            minimumValue={minTime ? minTime : 0}
-            maximumValue={maxTime ? maxTime : 1}
-            onValueChange={this.props.setWarnTime}
-            step={1}
-            value={warnTime}
-            style={[styles.inputs, styles.sliderInput]}
-          />
-          <Text style={[styles.inputs, styles.inputsText]}>{warnTime}</Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <Button height={40} width={100} type="primary" text="Start"
-            disabled={maxTime === 0}
-            onClick={this.runButtonClickHandler} />
-        </View>
+        <TouchableWithoutFeedback onPress={dismissKeyboard} style={styles.withoutfeedback}>
+          <View style={{flex: 1}}>
+            <View style={styles.inputContainer}>
+              <Text style={[styles.inputs, styles.inputsText]}>Minimum Time</Text>
+              <Slider
+                disabled={maxTime === 0}
+                minimumValue={0}
+                maximumValue={maxTime ? maxTime : 1}
+                onValueChange={this.handleMinChange}
+                step={1}
+                value={minTime}
+                style={[styles.inputs, styles.sliderInput]}
+              />
+              <Text style={[styles.inputs, styles.inputsText]}>{minTime}</Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={[styles.inputs, styles.inputsText]}>Warning Time</Text>
+              <Slider
+                disabled={maxTime === 0}
+                minimumValue={minTime ? minTime : 0}
+                maximumValue={maxTime ? maxTime : 1}
+                onValueChange={this.handleWarnChange}
+                step={1}
+                value={warnTime}
+                style={[styles.inputs, styles.sliderInput]}
+              />
+              <Text style={[styles.inputs, styles.inputsText]}>{warnTime}</Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <Button height={40} width={100} type="primary" text="Start"
+                disabled={maxTime === 0}
+                onClick={this.runButtonClickHandler} />
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
       </View>
     );
   }
@@ -117,8 +139,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'center',
-    backgroundColor: '#E0FFE0',
+    backgroundColor: 'linen',
     paddingTop: 40
+  },
+  withoutfeedback: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch'
   },
   compContainer: {
     flex: 1,

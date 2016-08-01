@@ -8,14 +8,13 @@ import React, {Component} from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  // Text,
-  // View,
   Navigator
 } from 'react-native';
 
 import Immutable from 'immutable';
 import {Provider} from 'react-redux';
 import {createStore/* , applyMiddleware, compose*/} from 'redux';
+import IdleTimerManager from 'react-native-idle-timer';
 import reducer from './reducers';
 import SetupScreen from './components/setupscreen';
 import TimerScreen from './components/timerscreen';
@@ -38,6 +37,7 @@ class TalkTimer extends Component {
       {index: 1, component: TimerScreen}
     ];
     this.renderScene = this.renderScene.bind(this);
+    this.navDidFocus = this.navDidFocus.bind(this);
   }
   renderScene(route, navigator) {
     return (
@@ -48,7 +48,11 @@ class TalkTimer extends Component {
     setupWinsize(store);
   }
   componentWillUnmount() {
+    IdleTimerManager.setIdleTimerDisabled(false);
     stopWinsize();
+  }
+  navDidFocus(route) { // disable idle timer when on timer scene
+    IdleTimerManager.setIdleTimerDisabled(route.index === 1);
   }
   render() {
     return (
@@ -58,6 +62,7 @@ class TalkTimer extends Component {
           initialRouteStack={this.routes}
           renderScene={this.renderScene}
           style={styles.container}
+          onDidFocus={this.navDidFocus}
         />
       </Provider>
     );
@@ -67,7 +72,7 @@ class TalkTimer extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFE0E0'
+    backgroundColor: 'linen'
   }
 });
 
