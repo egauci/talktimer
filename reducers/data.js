@@ -34,7 +34,7 @@ const data = (state = initState, action) => {
     }
     return newState;
   case 'SET_PAUSED':
-    const paused = action.payload !== undefined ? action.payload : !state.get('paused');
+    const paused = action.payload;
     newState = state.set('paused', paused);
     if (paused) {
       return newState.set('startPaused', Date.now());
