@@ -53,11 +53,11 @@ class TimerScreen extends Component {
     if (elapsed >= maximumTime) {
       elapsedBarColor = 'red';
     } else if (elapsed >= warnTime) {
-      elapsedBarColor = 'orange';
+      elapsedBarColor = 'darkorange';
     } else if (elapsed >= minimumTime) {
       elapsedBarColor = 'green';
     } else {
-      elapsedBarColor = 'lightblue';
+      elapsedBarColor = 'lightgray';
     }
     const elapsedBarHeight = Math.floor(Math.min(elapsed, maximumTime) / maximumTime * pixels);
     const elapsedBarTop = pixels - elapsedBarHeight + timerHeight;
@@ -98,7 +98,7 @@ class TimerScreen extends Component {
         {showMinimumLine()}
         {showWarnLine()}
         <View style={[styles.elapsedBar, {
-          width, top: elapsedBarTop, height: elapsedBarHeight, backgroundColor: elapsedBarColor}]} />
+          width: width - 20, top: elapsedBarTop, height: elapsedBarHeight, backgroundColor: elapsedBarColor}]} />
       </View>
     );
   }
@@ -119,22 +119,32 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     height: 2,
-    backgroundColor: 'orange'
+    backgroundColor: 'darkorange'
   },
   elapsedBar: {
-    position: 'absolute'
+    position: 'absolute',
+    left: 10,
+    borderWidth: 1,
+    borderColor: '#888888',
+    borderBottomWidth: 0,
+    shadowColor: 'darkgray',
+    shadowOffset: {width: 0, height: -1},
+    shadowOpacity: 0.7,
+    shadowRadius: 3
   },
   timerbar: {
     position: 'absolute',
     height: timerHeight,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 2,
     alignItems: 'center',
     borderBottomWidth: 2,
     borderBottomColor: 'red'
   },
   timertext: {
-    fontSize: 40,
-    color: '#666666'
+    fontSize: 50,
+    fontFamily: 'Helvetica Neue',
+    color: '#555555'
   },
   buttonBar: {
     position: 'absolute',

@@ -48,7 +48,7 @@ class SetupScreen extends Component {
           <TextInput
             multiline={false}
             onChangeText={this.totalChanged}
-            value={String(maxTime)}
+            value={maxTime === 0 ? '' : String(maxTime)}
             keyBoardType="numeric"
             style={[styles.inputs, styles.numInput]}
           />
